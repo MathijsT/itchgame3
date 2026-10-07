@@ -27,7 +27,8 @@ import { fmtMoney } from './format.js';
 
 export { resolveDecision, companyValue } from './events.js';
 
-const emptyLedger = () => ({ revenue: 0, channel: 0, cogs: 0, salaries: 0, rent: 0, upkeep: 0, marketing: 0, dev: 0, interest: 0, other: 0 });
+// `invest` (facilities, acquisitions) moves cash but is not an operating cost, so it is left out of profit.
+const emptyLedger = () => ({ revenue: 0, channel: 0, cogs: 0, salaries: 0, rent: 0, upkeep: 0, marketing: 0, dev: 0, interest: 0, other: 0, invest: 0 });
 
 export function newGame(opts = {}) {
   const difficulty = DIFFICULTIES[opts.difficulty] ? opts.difficulty : 'normal';
@@ -76,7 +77,7 @@ export function newGame(opts = {}) {
     achievements: {},
     tips: {},
     flags: {},
-    lastRandomEvent: 0,
+    lastRandomEvent: (era.year - 1977) * WEEKS_PER_YEAR,
     started: false,
     gameOver: null,
   };
@@ -615,6 +616,21 @@ export function train(state, staffId) {
   return { ok: true };
 }
 
+/** Cash price of one research point bought from universities and contract labs. */
+export function rpPrice(state) {
+  return Math.round(5000 * Math.pow(1.15, Math.max(0, curYear(state) - 1977)));
+}
+
+export function buyResearch(state, amount) {
+  const amt = Math.max(1, Math.round(amount));
+  const cost = amt * rpPrice(state);
+  if (state.company.cash < cost) return { error: `Sponsoring ${amt} RP costs ${fmtMoney(cost)}.` };
+  spend(state, cost, 'dev');
+  state.rp += amt;
+  cue(state, 'research');
+  return { ok: true, amount: amt, cost };
+}
+
 export function recruitCost(state) {
   return Math.round(staffSalary(50, curYear(state)) * 3);
 }
@@ -641,7 +657,7 @@ export function upgradeFacility(state, kind) {
   const next = table[state.facilities[kind] + 1];
   if (!next) return { error: 'Already at the maximum level.' };
   if (state.company.cash < next.cost) return { error: `Costs ${fmtMoney(next.cost)}.` };
-  spend(state, next.cost, 'other');
+  spend(state, next.cost, 'invest');
   state.facilities[kind]++;
   state.company.assets += next.cost;
   if (kind === 'office') unlock(state, 'garage_exit');
@@ -674,7 +690,7 @@ export function acquireRival(state, rivalId) {
   if (!rs || !rs.active || rival.immortal) return { error: 'Not available for purchase.' };
   const price = rivalValuation(state, rivalId);
   if (state.company.cash < price) return { error: `You need ${fmtMoney(price)}.` };
-  spend(state, price, 'other');
+  spend(state, price, 'invest');
   rs.active = false;
   rs.acquired = true;
   for (const p of state.products) if (p.owner === rivalId) p.active = false;

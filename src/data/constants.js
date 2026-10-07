@@ -41,7 +41,7 @@ export const DURATIONS = [
   { weeks: 24, name: 'Perfectionist' },
 ];
 // Researching tech before its historical year costs extra: [1 year early, 2 years early]
-export const EARLY_RESEARCH_MULT = [2, 4];
+export const EARLY_RESEARCH_MULT = [2.5, 5];
 
 // Share of each unit's retail price that never reaches you (retailers, carriers, distributors)
 // is set per category. Returns & warranty cost (1 - quality) * WARRANTY_RATE of revenue.

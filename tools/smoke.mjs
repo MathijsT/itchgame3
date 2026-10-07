@@ -80,6 +80,84 @@ try {
     await shot(`08-tab-${tab}`);
   }
 
+  // exercise the management actions with some extra cash and research points
+  await page.click('.speed-btn[data-speed="0"]');
+  await page.evaluate(async () => {
+    const { ctx } = await import('/src/ui/ctx.js');
+    ctx.state.company.cash += 2e6;
+    ctx.state.rp += 2000;
+    ctx.render(true);
+  });
+  await page.click('.tab[data-arg="products"]');
+  await page.click('[data-action="price"]');
+  await page.click('[data-pp]');
+  await page.waitForTimeout(150);
+  await shot('20-price');
+  await page.click('.modal-foot [data-ok]');
+  await page.click('[data-action="marketing"]');
+  await page.click('[data-run-camp="magazine"]');
+  await shot('21-marketing');
+  await page.click('.modal-foot [data-close]');
+  await page.click('tr[data-action="product"]');
+  await page.waitForTimeout(150);
+  await shot('22-product');
+  await page.click('.modal-head [data-close]');
+
+  await page.click('.tab[data-arg="markets"]');
+  await page.click('[data-action="market-cat"][data-arg="console"]');
+  await page.waitForTimeout(150);
+  await shot('23-market-console');
+
+  await page.click('.tab[data-arg="research"]');
+  await page.click('[data-action="research-tier"]');
+  await page.evaluate(async () => {
+    const { ctx } = await import('/src/ui/ctx.js');
+    ctx.state.week = Math.max(ctx.state.week, 2 * 48 + 4); // 1979: first company upgrades
+    ctx.render(true);
+  });
+  await page.click('[data-action="research-perk"]');
+  await page.click('[data-action="research-all"]');
+  await page.waitForTimeout(150);
+  await shot('24-research');
+
+  await page.click('.tab[data-arg="staff"]');
+  await page.click('[data-action="hire"]');
+  await page.click('[data-action="hire"]');
+  await page.click('[data-action="role"][data-arg="researcher"]');
+  await page.click('[data-action="train"]');
+  await page.click('[data-action="recruit"]');
+  await page.waitForTimeout(150);
+  await shot('25-staff');
+
+  await page.click('.tab[data-arg="company"]');
+  await page.click('[data-action="upgrade"][data-arg="office"]');
+  await page.click('[data-action="upgrade"][data-arg="lab"]');
+  await page.click('[data-action="borrow"]');
+  await page.click('[data-action="repay"]');
+  await page.waitForTimeout(150);
+  await shot('26-company');
+
+  const checks = await page.evaluate(async () => {
+    const { ctx } = await import('/src/ui/ctx.js');
+    const s = ctx.state;
+    return { staff: s.staff.length, office: s.facilities.office, lab: s.facilities.lab, researched: s.stats.researched, perks: Object.keys(s.perks).length, loan: s.company.loan };
+  });
+  if (checks.staff < 3 || checks.office < 1 || checks.lab < 1 || !checks.researched || !checks.perks) {
+    throw new Error(`management actions did not apply: ${JSON.stringify(checks)}`);
+  }
+
+  // a second product with two parallel teams is not possible in a small office, but designing again is
+  await page.click('[data-action="new-product"]');
+  await page.click('.cat-card[data-cat="console"]');
+  await page.click('[data-preset="budget"]');
+  await page.click('[data-start]');
+  await page.click('.speed-btn[data-speed="3"]');
+  await page.waitForSelector('[data-launch]', { timeout: 30000 });
+  await page.click('[data-camp="magazine"]');
+  await page.click('[data-launch]');
+  await page.waitForSelector('.review.show');
+  await page.click('.modal-foot [data-close]');
+
   // fast-forward through history using the live modules, auto-resolving anything that pops up
   const result = await page.evaluate(async () => {
     const { ctx } = await import('/src/ui/ctx.js');

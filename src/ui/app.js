@@ -125,6 +125,7 @@ const ACTIONS = {
   'research-tier': (el) => perform(G.researchTier, el.dataset.id),
   'research-cat': (el) => perform(G.researchCategory, el.dataset.id),
   'research-perk': (el) => perform(G.researchPerk, el.dataset.id),
+  'buy-rp': (el) => { const r = perform(G.buyResearch, Number(el.dataset.arg)); if (r && r.ok) toast(`Bought ${fmtNum(r.amount)} RP for ${fmtMoney(r.cost)}.`, 'good'); },
   role: (el) => { perform(G.setRole, el.dataset.id, el.dataset.arg); sfx('click'); },
   train: (el) => { const r = perform(G.train, el.dataset.id); if (r && r.ok) sfx('upgrade'); },
   fire: (el) => {

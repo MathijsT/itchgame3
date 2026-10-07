@@ -18,7 +18,8 @@ It's plain HTML, CSS and JavaScript (ES modules) with no dependencies and no bui
 - **Press reviews** from four magazines, with scores that move your brand.
 - **31 parody rivals** (plus a crowd of no-name clone makers) that enter and leave markets on a rough historical schedule, react when you dominate,
   can go bankrupt, and can be bought out.
-- **Research**: 230+ technologies from 1975 to 2038, prototype research up to two years early, new markets to unlock and company upgrades.
+- **Research**: 230+ technologies from 1975 to 2038, prototype research up to two years early, new markets to unlock,
+  company upgrades, and sponsored research to turn late-game cash into research points.
 - **Staff**: hire engineers, researchers and marketers, train them, and grow from a garage to a tech campus
   (shown as a pixel-art office that changes with the era).
 - **Factories, labs, loans, acquisitions, random events** (headhunters, patent trolls, recalls, VC offers…) and
@@ -56,7 +57,10 @@ Saves live in the player's browser (`localStorage`), so they survive page reload
 npm test             # headless balance simulation: a bot plays several full campaigns, fails on bankruptcy or NaN
 npm run sim          # one verbose campaign with yearly stats (flags: --seed N --era 1992 --difficulty hard --naive --early --size)
 npm run smoke        # browser smoke test with Playwright (needs the playwright package and a Chromium)
+node tools/promo.mjs # regenerate the itch.io cover and screenshots in promo/
 ```
+
+`promo/` holds a 630×500 cover image and 1280×720 screenshots for the itch.io page.
 
 ### Layout
 
@@ -72,7 +76,7 @@ src/sim/             the simulation (no DOM; runs in Node for testing)
   rivals.js          rival product releases, pricing, bankruptcies
   events.js          scripted and random events
 src/ui/              rendering: tabs, modals, designer wizard, launch flow, charts, pixel-art office, sound
-tools/               balance simulator, browser smoke test, itch.io packager
+tools/               balance bot and simulator, browser smoke test, itch.io packager, promo screenshots
 ```
 
 The simulation is deterministic for a given seed. Most balance knobs live in `src/data/constants.js`

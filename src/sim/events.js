@@ -214,7 +214,7 @@ const RANDOM_EVENTS = [
 
 export function randomEventsTick(state) {
   if (state.week - state.lastRandomEvent < 14) return;
-  if (state.week < 20) return;
+  if (state.week - state.startWeek < 20) return;
   if (!chance(state, 0.03)) return;
   const options = RANDOM_EVENTS.filter((e) => e.cond(state));
   if (!options.length) return;

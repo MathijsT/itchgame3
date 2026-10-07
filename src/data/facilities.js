@@ -16,10 +16,10 @@ export const FACTORIES = [
 
 export const LABS = [
   { name: 'Workbench', mult: 1.0, upkeep: 0, cost: 0, desc: 'A soldering iron and a dream.' },
-  { name: 'Research Lab', mult: 1.25, upkeep: 1000, cost: 80000, desc: '+25% research, +12% development.' },
-  { name: 'R&D Center', mult: 1.6, upkeep: 25000, cost: 4000000, desc: '+60% research, +30% development.' },
-  { name: 'Advanced Labs', mult: 2.1, upkeep: 300000, cost: 80000000, desc: '+110% research, +55% development.' },
-  { name: 'Skunkworks', mult: 2.8, upkeep: 3000000, cost: 1500000000, desc: '+180% research, +90% development.' },
+  { name: 'Research Lab', mult: 1.2, upkeep: 1000, cost: 80000, desc: '+20% research, +10% development.' },
+  { name: 'R&D Center', mult: 1.45, upkeep: 25000, cost: 4000000, desc: '+45% research, +22% development.' },
+  { name: 'Advanced Labs', mult: 1.75, upkeep: 300000, cost: 80000000, desc: '+75% research, +37% development.' },
+  { name: 'Skunkworks', mult: 2.1, upkeep: 3000000, cost: 1500000000, desc: '+110% research, +55% development.' },
 ];
 
 export const CAMPAIGNS = [

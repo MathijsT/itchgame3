@@ -13,7 +13,7 @@ import {
   devPower, researchPower, marketingMult, payroll, deskCount, hireFee, trainCost,
 } from '../sim/staff.js';
 import { marketPotential, factoryCapacity } from '../sim/market.js';
-import { maxLoan, companyValue, devProjects, recruitCost } from '../sim/game.js';
+import { maxLoan, companyValue, devProjects, recruitCost, rpPrice } from '../sim/game.js';
 import { rivalValuation, rivalInCategory } from '../sim/rivals.js';
 import { curYear, curYearInt, formatDate } from '../sim/util.js';
 import { fmtMoney, fmtNum, fmtPct, fmtPrice } from '../sim/format.js';
@@ -258,6 +258,8 @@ function research(state) {
       <div class="kpi"><div class="lbl">Researchers</div><div class="val">${state.staff.filter((s) => s.role === 'researcher').length}</div><div class="sub">Idle engineers also research at 75% speed</div></div>
       <div class="kpi"><div class="lbl">Lab</div><div class="val" style="font-size:16px">${LABS[state.facilities.lab].name}</div><div class="sub">×${LABS[state.facilities.lab].mult} research</div></div>
     </div>
+    <div class="card mb"><div class="row wrap"><div class="grow"><b>🎓 Sponsored research</b><div class="small muted">Fund university and contract labs to buy research points with cash. Costs ${fmtMoney(rpPrice(state))} per RP this year; prices rise every year.</div></div>
+      ${[Math.max(10, Math.round(rpw * 4)), Math.max(50, Math.round(rpw * 20))].map((n) => `<button class="btn btn-sm" data-action="buy-rp" data-arg="${n}" ${state.company.cash >= n * rpPrice(state) ? '' : 'disabled'}>+${fmtNum(n)} RP · ${fmtMoney(n * rpPrice(state))}</button>`).join('')}</div></div>
     <div class="hint mb">New technologies appear each year. Researching them lets you build faster products. Technology older than 6 years becomes a free industry standard. ⚗ Prototype tech can be researched up to 2 years early at a premium.</div>
     ${newCats ? `<h3 class="mb">New markets</h3><div class="grid grid-auto mb">${newCats}</div>` : ''}
     ${later ? `<div class="small muted mb">Coming later: ${later}</div>` : ''}
@@ -394,7 +396,9 @@ function finance(state) {
     const v = sumWeeks(state, n, key) * sign;
     return `<td class="num ${v < 0 ? 'bad' : ''}">${fmtMoney(v)}</td>`;
   }).join('')}</tr>`).join('');
-  const profitRow = `<tr><td><b>Profit</b></td>${cols.map((n) => { const v = sumWeeks(state, n, 'profit'); return `<td class="num ${v >= 0 ? 'good' : 'bad'}"><b>${fmtMoney(v)}</b></td>`; }).join('')}</tr>`;
+  const profitRow = `<tr><td><b>Operating profit</b></td>${cols.map((n) => { const v = sumWeeks(state, n, 'profit'); return `<td class="num ${v >= 0 ? 'good' : 'bad'}"><b>${fmtMoney(v)}</b></td>`; }).join('')}</tr>
+    <tr><td class="muted">Investments (facilities, acquisitions)</td>${cols.map((n) => { const v = -sumWeeks(state, n, 'invest'); return `<td class="num ${v < 0 ? 'bad' : ''}">${fmtMoney(v)}</td>`; }).join('')}</tr>
+    <tr><td><b>Net cash flow</b></td>${cols.map((n) => { const v = sumWeeks(state, n, 'profit') - sumWeeks(state, n, 'invest'); return `<td class="num ${v >= 0 ? 'good' : 'bad'}"><b>${fmtMoney(v)}</b></td>`; }).join('')}</tr>`;
   const monthly = state.history.monthly.slice(-240);
   charts.fin = {
     type: 'line',
