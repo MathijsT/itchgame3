@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Silicon Garage</title>
+  <meta name="description" content="Silicon Garage: a hardware tycoon game. Start in a garage in 1977 and build computers, consoles, chips and phones through 60 years of tech history.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='3' fill='%2339d0ff'/%3E%3Crect x='11' y='11' width='10' height='10' fill='%230b1020'/%3E%3Cpath d='M9 2v4M14 2v4M18 2v4M23 2v4M9 26v4M14 26v4M18 26v4M23 26v4M2 9h4M2 14h4M2 18h4M2 23h4M26 9h4M26 14h4M26 18h4M26 23h4' stroke='%2339d0ff' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Title screen -->
+    <section id="title-screen" class="screen">
+      <canvas id="title-bg" aria-hidden="true"></canvas>
+      <div class="title-card">
+        <div class="logo-chip" aria-hidden="true"><span></span></div>
+        <h1 class="game-title">Silicon Garage</h1>
+        <p class="game-subtitle">A Hardware Tycoon</p>
+        <p class="title-blurb">It's 1977. You have a garage, a soldering iron and a dream.<br>Design computers, consoles, chips and phones through sixty years of tech history and outbuild the giants.</p>
+        <div class="title-buttons">
+          <button class="btn btn-primary btn-lg" id="btn-continue" hidden>Continue</button>
+          <button class="btn btn-primary btn-lg" id="btn-new">New Company</button>
+          <button class="btn btn-lg" id="btn-import">Import Save</button>
+          <button class="btn btn-lg" id="btn-howto">How to Play</button>
+          <button class="btn btn-lg" id="btn-scores" hidden>Hall of Fame</button>
+        </div>
+        <p class="title-foot">Progress saves automatically in your browser.</p>
+      </div>
+    </section>
+
+    <!-- Game screen -->
+    <section id="game-screen" class="screen" hidden>
+      <header class="topbar">
+        <div class="tb-company">
+          <div class="logo-chip small" aria-hidden="true"><span></span></div>
+          <div>
+            <div class="tb-name" id="tb-name"></div>
+            <div class="tb-date" id="tb-date"></div>
+          </div>
+        </div>
+        <div class="tb-stats" id="tb-stats"></div>
+        <div class="tb-controls">
+          <div class="speed" role="group" aria-label="Game speed">
+            <button class="speed-btn" data-speed="0" title="Pause (Space)">❚❚</button>
+            <button class="speed-btn" data-speed="1" title="Normal speed (1)">▶</button>
+            <button class="speed-btn" data-speed="2" title="Fast (2)">▶▶</button>
+            <button class="speed-btn" data-speed="3" title="Very fast (3)">▶▶▶</button>
+          </div>
+          <button class="icon-btn" id="btn-sound" title="Toggle sound">🔊</button>
+          <button class="icon-btn" id="btn-menu" title="Menu">☰</button>
+        </div>
+      </header>
+      <div class="layout">
+        <aside class="left">
+          <div class="office-wrap">
+            <canvas id="office" width="384" height="216" aria-label="Your office"></canvas>
+            <div class="office-label" id="office-label"></div>
+          </div>
+          <div id="left-panel" class="left-panel"></div>
+        </aside>
+        <main class="main">
+          <nav class="tabs" id="tabs" role="tablist"></nav>
+          <div class="tab-content" id="tab-content"></div>
+        </main>
+      </div>
+    </section>
+
+    <div id="toasts" aria-live="polite"></div>
+    <div id="modal-root"></div>
+    <input type="file" id="file-input" accept=".txt,.json,.sav" hidden>
+  </div>
+  <noscript>This game needs JavaScript to run.</noscript>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

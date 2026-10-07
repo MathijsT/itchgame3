@@ -1,0 +1,15 @@
+{
+  "name": "hardware-tycoon",
+  "version": "1.0.0",
+  "description": "Silicon Garage: a hardware company tycoon game for the browser",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "npx --yes http-server -c-1 -p 8080 .",
+    "sim": "node tools/simulate.mjs",
+    "test": "node tools/simulate.mjs --quiet",
+    "smoke": "node tools/smoke.mjs",
+    "package": "node tools/package.mjs"
+  },
+  "license": "MIT"
+}
