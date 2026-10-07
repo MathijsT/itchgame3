@@ -53,6 +53,7 @@ export function initApp({ onExit }) {
   ctx.perform = perform;
   ctx.toast = toast;
   ctx.tip = tip;
+  ctx.setSpeed = setSpeed;
 
   $('#tabs').innerHTML = TABS.map((t) => `<button class="tab" role="tab" data-action="tab" data-arg="${t.id}">${t.name}<span class="badge" data-badge="${t.id}" hidden></span></button>`).join('');
 
@@ -368,6 +369,8 @@ function showGameOver() {
 
 // ------------------------------------------------------------------ saving
 
+let saveWarned = false;
+
 export function saveGame() {
   const s = ctx.state;
   if (!s) return false;
@@ -376,6 +379,10 @@ export function saveGame() {
     return true;
   } catch (err) {
     console.warn('Save failed', err);
+    if (!saveWarned) {
+      saveWarned = true;
+      toast('Autosave failed', 'bad', 'Your browser blocked or filled up local storage. Use Menu → Export save to keep your progress.', '⚠️', 9000);
+    }
     return false;
   }
 }

@@ -10,11 +10,13 @@ export const ctx = {
   marketCat: 'homecomputer',
   researchAll: false,
   weekFrac: 0,
-  dirty: true,
   settings: { sound: true },
   /** set by app.js */
   render: () => {},
   perform: () => {},
+  toast: () => {},
+  tip: () => {},
+  setSpeed: () => {},
 };
 
 const SETTINGS_KEY = 'silicongarage.settings';

@@ -170,7 +170,12 @@ function openDesigner(catId) {
       lastDrafts[catId] = { focus: { ...draft.focus }, duration: draft.duration };
       m.close();
       ctx.toast(`Development of ${draft.name} has started!`, 'good');
-      ctx.tip('first_project', 'Your team is building it now. Watch the progress bar on the left; you will set a price when it is done.');
+      if (!state.flags.autoplayed && ctx.speed === 0) {
+        // first project: start the clock so new players see time moving
+        state.flags.autoplayed = true;
+        ctx.setSpeed(1);
+      }
+      ctx.tip('first_project', 'Your team is building it now and time is running. Watch the progress bar on the left; you will set a price when it is done. Space pauses.');
     }
   });
   update();
